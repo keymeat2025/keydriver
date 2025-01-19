@@ -3,112 +3,30 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>OTP Login</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 0;
-      padding: 0;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      background-color: #f4f4f4;
-    }
-    .otp-container {
-      background: #fff;
-      padding: 20px;
-      border-radius: 8px;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-      text-align: center;
-      width: 300px;
-    }
-    .otp-container h2 {
-      margin-bottom: 20px;
-      font-size: 24px;
-    }
-    .otp-container input {
-      width: 100%;
-      padding: 10px;
-      margin: 10px 0;
-      border: 1px solid #ccc;
-      border-radius: 4px;
-      font-size: 16px;
-    }
-    .otp-container button {
-      width: 100%;
-      padding: 10px;
-      background: #007bff;
-      color: #fff;
-      border: none;
-      border-radius: 4px;
-      font-size: 16px;
-      cursor: pointer;
-    }
-    .otp-container button:disabled {
-      background: #aaa;
-      cursor: not-allowed;
-    }
-    .message {
-      color: green;
-      margin-top: 10px;
-    }
-    .error {
-      color: red;
-      margin-top: 10px;
-    }
-  </style>
+  <title>OTP Registration</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-auth.js"></script>
+  <script src="firebaseConfig.js" defer></script>
+  <script src="script.js" defer></script>
 </head>
 <body>
-  <div class="otp-container">
-    <h2>OTP Login</h2>
-    <div id="step1">
-      <input type="text" id="phone" placeholder="Enter mobile number" maxlength="10">
-      <button id="sendOtpBtn" onclick="sendOTP()">Send OTP</button>
+  <div class="container">
+    <h1>OTP Registration</h1>
+    <div>
+      <label for="phone">Phone Number:</label>
+      <input type="text" id="phone" placeholder="+1234567890">
     </div>
-    <div id="step2" style="display: none;">
-      <input type="text" id="otp" placeholder="Enter OTP" maxlength="6">
-      <button id="verifyOtpBtn" onclick="verifyOTP()">Verify OTP</button>
+    <div id="recaptcha-container"></div>
+    <button onclick="sendOtp()">Send OTP</button>
+
+    <div>
+      <label for="otp">Enter OTP:</label>
+      <input type="text" id="otp" placeholder="6-digit OTP">
     </div>
-    <p id="message" class="message"></p>
-    <p id="error" class="error"></p>
+    <button onclick="verifyOtp()">Verify OTP</button>
+
+    <p id="status"></p>
   </div>
-
-  <script>
-    function sendOTP() {
-      const phone = document.getElementById("phone").value;
-      const messageEl = document.getElementById("message");
-      const errorEl = document.getElementById("error");
-
-      messageEl.textContent = "";
-      errorEl.textContent = "";
-
-      if (phone.length === 10 && /^\d+$/.test(phone)) {
-        // Simulate OTP sent
-        messageEl.textContent = "OTP sent to " + phone;
-        document.getElementById("step1").style.display = "none";
-        document.getElementById("step2").style.display = "block";
-      } else {
-        errorEl.textContent = "Please enter a valid 10-digit mobile number.";
-      }
-    }
-
-    function verifyOTP() {
-      const otp = document.getElementById("otp").value;
-      const messageEl = document.getElementById("message");
-      const errorEl = document.getElementById("error");
-
-      messageEl.textContent = "";
-      errorEl.textContent = "";
-
-      if (otp.length === 6 && /^\d+$/.test(otp)) {
-        // Simulate OTP verification
-        messageEl.textContent = "Login successful!";
-        errorEl.textContent = "";
-      } else {
-        errorEl.textContent = "Invalid OTP. Please try again after sometime.";
-      }
-    }
-  </script>
 </body>
 </html>
