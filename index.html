@@ -1,58 +1,114 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Registration Page</title>
-    <script>
-        async function sendOTP() {
-            const phoneNumber = document.getElementById("phone").value;
-            if (!phoneNumber) {
-                alert("Please enter your phone number");
-                return;
-            }
-
-            // Replace with backend OTP send API
-            alert(`OTP sent to ${phoneNumber}`);
-        }
-
-        async function registerUser(event) {
-            event.preventDefault();
-            const userType = document.querySelector('input[name="userType"]:checked')?.value;
-            const phoneNumber = document.getElementById("phone").value;
-            const otp = document.getElementById("otp").value;
-
-            if (!userType || !phoneNumber || !otp) {
-                alert("Please fill all fields.");
-                return;
-            }
-
-            // Replace with backend registration API
-            alert(`User Type: ${userType}, Phone: ${phoneNumber}, OTP: ${otp}`);
-        }
-    </script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OTP Login</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background-color: #f4f4f4;
+    }
+    .otp-container {
+      background: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      text-align: center;
+      width: 300px;
+    }
+    .otp-container h2 {
+      margin-bottom: 20px;
+      font-size: 24px;
+    }
+    .otp-container input {
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      font-size: 16px;
+    }
+    .otp-container button {
+      width: 100%;
+      padding: 10px;
+      background: #007bff;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    .otp-container button:disabled {
+      background: #aaa;
+      cursor: not-allowed;
+    }
+    .message {
+      color: green;
+      margin-top: 10px;
+    }
+    .error {
+      color: red;
+      margin-top: 10px;
+    }
+  </style>
 </head>
 <body>
-    <h1>Registration Page</h1>
-    <form onsubmit="registerUser(event)">
-        <label>
-            <input type="radio" name="userType" value="driver"> Driver
-        </label>
-        <br>
-        <label>
-            <input type="radio" name="userType" value="carOwner"> Car Owner
-        </label>
-        <br><br>
-        <label>
-            Phone Number: <input type="text" id="phone" placeholder="Enter your phone">
-        </label>
-        <button type="button" onclick="sendOTP()">Send OTP</button>
-        <br><br>
-        <label>
-            OTP: <input type="text" id="otp" placeholder="Enter OTP">
-        </label>
-        <br><br>
-        <button type="submit">Register</button>
-    </form>
+  <div class="otp-container">
+    <h2>OTP Login</h2>
+    <div id="step1">
+      <input type="text" id="phone" placeholder="Enter mobile number" maxlength="10">
+      <button id="sendOtpBtn" onclick="sendOTP()">Send OTP</button>
+    </div>
+    <div id="step2" style="display: none;">
+      <input type="text" id="otp" placeholder="Enter OTP" maxlength="6">
+      <button id="verifyOtpBtn" onclick="verifyOTP()">Verify OTP</button>
+    </div>
+    <p id="message" class="message"></p>
+    <p id="error" class="error"></p>
+  </div>
+
+  <script>
+    function sendOTP() {
+      const phone = document.getElementById("phone").value;
+      const messageEl = document.getElementById("message");
+      const errorEl = document.getElementById("error");
+
+      messageEl.textContent = "";
+      errorEl.textContent = "";
+
+      if (phone.length === 10 && /^\d+$/.test(phone)) {
+        // Simulate OTP sent
+        messageEl.textContent = "OTP sent to " + phone;
+        document.getElementById("step1").style.display = "none";
+        document.getElementById("step2").style.display = "block";
+      } else {
+        errorEl.textContent = "Please enter a valid 10-digit mobile number.";
+      }
+    }
+
+    function verifyOTP() {
+      const otp = document.getElementById("otp").value;
+      const messageEl = document.getElementById("message");
+      const errorEl = document.getElementById("error");
+
+      messageEl.textContent = "";
+      errorEl.textContent = "";
+
+      if (otp.length === 6 && /^\d+$/.test(otp)) {
+        // Simulate OTP verification
+        messageEl.textContent = "Login successful!";
+        errorEl.textContent = "";
+      } else {
+        errorEl.textContent = "Invalid OTP. Please try again after sometime.";
+      }
+    }
+  </script>
 </body>
 </html>
