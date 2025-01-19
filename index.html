@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registration Page</title>
+    <script>
+        async function sendOTP() {
+            const phoneNumber = document.getElementById("phone").value;
+            if (!phoneNumber) {
+                alert("Please enter your phone number");
+                return;
+            }
+
+            // Replace with backend OTP send API
+            alert(`OTP sent to ${phoneNumber}`);
+        }
+
+        async function registerUser(event) {
+            event.preventDefault();
+            const userType = document.querySelector('input[name="userType"]:checked')?.value;
+            const phoneNumber = document.getElementById("phone").value;
+            const otp = document.getElementById("otp").value;
+
+            if (!userType || !phoneNumber || !otp) {
+                alert("Please fill all fields.");
+                return;
+            }
+
+            // Replace with backend registration API
+            alert(`User Type: ${userType}, Phone: ${phoneNumber}, OTP: ${otp}`);
+        }
+    </script>
+</head>
+<body>
+    <h1>Registration Page</h1>
+    <form onsubmit="registerUser(event)">
+        <label>
+            <input type="radio" name="userType" value="driver"> Driver
+        </label>
+        <br>
+        <label>
+            <input type="radio" name="userType" value="carOwner"> Car Owner
+        </label>
+        <br><br>
+        <label>
+            Phone Number: <input type="text" id="phone" placeholder="Enter your phone">
+        </label>
+        <button type="button" onclick="sendOTP()">Send OTP</button>
+        <br><br>
+        <label>
+            OTP: <input type="text" id="otp" placeholder="Enter OTP">
+        </label>
+        <br><br>
+        <button type="submit">Register</button>
+    </form>
+</body>
+</html>
