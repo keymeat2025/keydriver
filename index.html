@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Firebase OTP Validation</title>
+  <title>27 jan Firebase OTP Validation</title>
   <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-auth.js"></script>
 </head>
 <body>
-  <h2>Firebase OTP Validation</h2>
+  <h2>27 jan Firebase OTP Validation</h2>
   <div id="recaptcha-container"></div>
   <input type="text" id="phone-number" placeholder="Enter phone number">
   <button onclick="sendOTP()">Send OTP</button>
@@ -14,26 +14,34 @@
   <input type="text" id="otp" placeholder="Enter OTP">
   <button onclick="verifyOTP()">Verify OTP</button>
 
-  <script type="module">
-    // Your Firebase configuration
-    const firebaseConfig = {
-      apiKey: "YOUR_API_KEY",
-      authDomain: "YOUR_AUTH_DOMAIN",
-      projectId: "YOUR_PROJECT_ID",
-      storageBucket: "YOUR_STORAGE_BUCKET",
-      messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-      appId: "YOUR_APP_ID",
-    };
+<script type="module">
+  // Import the functions you need from the SDKs you need
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-app.js";
+  import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-analytics.js";
+  // TODO: Add SDKs for Firebase products that you want to use
+  // https://firebase.google.com/docs/web/setup#available-libraries
 
-    // Initialize Firebase
-    import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.0.0/firebase-app.js';
-    import { getAuth, RecaptchaVerifier, signInWithPhoneNumber } from 'https://www.gstatic.com/firebasejs/9.0.0/firebase-auth.js';
+  // Your web app's Firebase configuration
+  // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+  const firebaseConfig = {
+    apiKey: "AIzaSyCBrxUnU9HYHlhITh_bWy6E_2mCE8zE57s",
+    authDomain: "keydriver-3e349.firebaseapp.com",
+    projectId: "keydriver-3e349",
+    storageBucket: "keydriver-3e349.firebasestorage.app",
+    messagingSenderId: "510058673733",
+    appId: "1:510058673733:web:a8715f9a97618ddd38952c",
+    measurementId: "G-M1MZX6EF6H"
+  };
 
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth();
+  // Initialize Firebase
+  const app = initializeApp(firebaseConfig);
+  const analytics = getAnalytics(app);
+</script>
+
+    let confirmationResult;
 
     // Recaptcha verifier
-    window.recaptchaVerifier = new RecaptchaVerifier('recaptcha-container', {
+    window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container', {
       'size': 'normal',
       'callback': (response) => {
         // reCAPTCHA solved, allow sendOTP
@@ -47,9 +55,9 @@
       const phoneNumber = document.getElementById('phone-number').value;
       const appVerifier = window.recaptchaVerifier;
 
-      signInWithPhoneNumber(auth, phoneNumber, appVerifier)
-        .then((confirmationResult) => {
-          window.confirmationResult = confirmationResult;
+      firebase.auth().signInWithPhoneNumber(phoneNumber, appVerifier)
+        .then((result) => {
+          confirmationResult = result;
           alert('OTP sent!');
         }).catch((error) => {
           console.error("Error during sending OTP", error);
@@ -59,7 +67,7 @@
 
     function verifyOTP() {
       const otp = document.getElementById('otp').value;
-      window.confirmationResult.confirm(otp).then((result) => {
+      confirmationResult.confirm(otp).then((result) => {
         const user = result.user;
         alert('OTP verified successfully!');
       }).catch((error) => {
