@@ -8,7 +8,6 @@
   <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore.js"></script>
   <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_GOOGLE_MAPS_API_KEY&libraries=places"></script>
   <script>
-    // Your Firebase configuration
     const firebaseConfig = {
       apiKey: "YOUR_API_KEY",
       authDomain: "YOUR_AUTH_DOMAIN",
@@ -18,7 +17,6 @@
       appId: "YOUR_APP_ID",
     };
 
-    // Initialize Firebase
     firebase.initializeApp(firebaseConfig);
     const db = firebase.firestore();
 
@@ -51,7 +49,7 @@
       <label for="driver-location">Driver Location:</label><br>
       <input type="text" id="driver-location" name="driver-location" required><br><br>
       <input type="hidden" id="location-lat" name="location-lat">
-      <input type="hidden" id="location-lng" name="location-lng">
+      <input type="hidden" id="location-lng" name="location-lng"><br><br>
 
       <input type="submit" value="Submit">
     </form>
@@ -59,10 +57,8 @@
     <script>
       document.getElementById('driver-form').onsubmit = function(event) {
         event.preventDefault();
-        // Collect data from the form
         const formData = new FormData(event.target);
 
-        // Save driver data to Firestore
         db.collection("drivers").add({
           driverName: formData.get('driver-name'),
           driverContact: formData.get('driver-contact'),
