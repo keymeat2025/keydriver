@@ -1,10 +1,86 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Driver Page</title>
+  <title>Driver Details</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore.js"></script>
+  <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_GOOGLE_MAPS_API_KEY&libraries=places"></script>
+  <script>
+    // Your Firebase configuration
+    const firebaseConfig = {
+      apiKey: "YOUR_API_KEY",
+      authDomain: "YOUR_AUTH_DOMAIN",
+      projectId: "YOUR_PROJECT_ID",
+      storageBucket: "YOUR_STORAGE_BUCKET",
+      messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+      appId: "YOUR_APP_ID",
+    };
+
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+
+    function authenticateUser() {
+      firebase.auth().onAuthStateChanged((user) => {
+        if (!user) {
+          window.location.href = 'authentication.html';
+        }
+      });
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+      authenticateUser();
+    });
+  </script>
 </head>
 <body>
-  <h2>Driver Page</h2>
-  <!-- Content will be added later -->
+  <div class="container">
+    <h2>Driver Details</h2>
+    <form id="driver-form">
+      <label for="driver-name">Driver Name:</label><br>
+      <input type="text" id="driver-name" name="driver-name" required><br><br>
+
+      <label for="driver-contact">Contact Number:</label><br>
+      <input type="tel" id="driver-contact" name="driver-contact" required><br><br>
+
+      <label for="driver-license">Driver License Number:</label><br>
+      <input type="text" id="driver-license" name="driver-license" required><br><br>
+
+      <label for="driver-location">Driver Location:</label><br>
+      <input type="text" id="driver-location" name="driver-location" required><br><br>
+      <input type="hidden" id="location-lat" name="location-lat">
+      <input type="hidden" id="location-lng" name="location-lng">
+
+      <input type="submit" value="Submit">
+    </form>
+
+    <script>
+      document.getElementById('driver-form').onsubmit = function(event) {
+        event.preventDefault();
+        // Collect data from the form
+        const formData = new FormData(event.target);
+
+        // Save driver data to Firestore
+        db.collection("drivers").add({
+          driverName: formData.get('driver-name'),
+          driverContact: formData.get('driver-contact'),
+          driverLicense: formData.get('driver-license'),
+          driverLocation: formData.get('driver-location'),
+          locationLat: formData.get('location-lat'),
+          locationLng: formData.get('location-lng'),
+          timestamp: firebase.firestore.FieldValue.serverTimestamp()
+        })
+        .then(() => {
+          alert('Driver details submitted successfully!');
+        })
+        .catch((error) => {
+          console.error("Error submitting driver details: ", error);
+          alert('Failed to submit driver details. Please try again.');
+        });
+      };
+    </script>
+  </div>
 </body>
 </html>
