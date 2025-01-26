@@ -2,7 +2,9 @@
 <html>
 <head>
   <title>Car Owner Details</title>
+  <link rel="stylesheet" href="styles.css">
   <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-auth.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore.js"></script>
   <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_GOOGLE_MAPS_API_KEY&libraries=places"></script>
   <script>
@@ -35,96 +37,110 @@
     document.addEventListener('DOMContentLoaded', function() {
       initMap();
     });
+
+    function authenticateUser() {
+      firebase.auth().onAuthStateChanged((user) => {
+        if (!user) {
+          window.location.href = 'authentication.html';
+        }
+      });
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+      authenticateUser();
+    });
   </script>
 </head>
 <body>
-  <h2>Car Owner Details</h2>
-  <form id="car-owner-form">
-    <label for="owner-name">Owner Name:</label><br>
-    <input type="text" id="owner-name" name="owner-name" required><br><br>
+  <div class="container">
+    <h2>Car Owner Details</h2>
+    <form id="car-owner-form">
+      <label for="owner-name">Owner Name:</label><br>
+      <input type="text" id="owner-name" name="owner-name" required><br><br>
 
-    <label for="owner-contact">Contact Number:</label><br>
-    <input type="tel" id="owner-contact" name="owner-contact" required><br><br>
+      <label for="owner-contact">Contact Number:</label><br>
+      <input type="tel" id="owner-contact" name="owner-contact" required><br><br>
 
-    <label for="car-make">Car Make:</label><br>
-    <input type="text" id="car-make" name="car-make" required><br><br>
+      <label for="car-make">Car Make (e.g., Maruti Suzuki, Hyundai):</label><br>
+      <input type="text" id="car-make" name="car-make" required><br><br>
 
-    <label for="car-model">Car Model:</label><br>
-    <input type="text" id="car-model" name="car-model" required><br><br>
+      <label for="car-model">Car Model (e.g., Swift, i20):</label><br>
+      <input type="text" id="car-model" name="car-model" required><br><br>
 
-    <label for="car-year">Year of Manufacture:</label><br>
-    <input type="number" id="car-year" name="car-year" required><br><br>
+      <label for="car-year">Year of Manufacture:</label><br>
+      <input type="number" id="car-year" name="car-year" required><br><br>
 
-    <label for="car-license-plate">License Plate Number:</label><br>
-    <input type="text" id="car-license-plate" name="car-license-plate" required><br><br>
+      <label for="car-license-plate">License Plate Number:</label><br>
+      <input type="text" id="car-license-plate" name="car-license-plate" required><br><br>
 
-    <label for="car-location">Car Location:</label><br>
-    <input type="text" id="car-location" name="car-location" required><br><br>
-    <input type="hidden" id="location-lat" name="location-lat">
-    <input type="hidden" id="location-lng" name="location-lng">
+      <label for="car-location">Car Location:</label><br>
+      <input type="text" id="car-location" name="car-location" required><br><br>
+      <input type="hidden" id="location-lat" name="location-lat">
+      <input type="hidden" id="location-lng" name="location-lng">
 
-    <h3>Book a Driver</h3>
-    <input type="radio" id="book-now" name="booking-type" value="now" checked>
-    <label for="book-now">Book Now</label><br>
-    <input type="radio" id="schedule-later" name="booking-type" value="later">
-    <label for="schedule-later">Schedule for Later</label><br><br>
+      <h3>Book a Driver</h3>
+      <input type="radio" id="book-now" name="booking-type" value="now" checked>
+      <label for="book-now">Book Now</label><br>
+      <input type="radio" id="schedule-later" name="booking-type" value="later">
+      <label for="schedule-later">Schedule for Later</label><br><br>
 
-    <div id="schedule-fields" style="display: none;">
-      <label for="schedule-date">Date:</label><br>
-      <input type="date" id="schedule-date" name="schedule-date"><br><br>
+      <div id="schedule-fields" style="display: none;">
+        <label for="schedule-date">Date:</label><br>
+        <input type="date" id="schedule-date" name="schedule-date"><br><br>
 
-      <label for="schedule-time">Time:</label><br>
-      <input type="time" id="schedule-time" name="schedule-time"><br><br>
-    </div>
+        <label for="schedule-time">Time:</label><br>
+        <input type="time" id="schedule-time" name="schedule-time"><br><br>
+      </div>
 
-    <input type="submit" value="Submit">
-  </form>
+      <input type="submit" value="Submit">
+    </form>
 
-  <script>
-    document.getElementById('schedule-later').onclick = function() {
-      document.getElementById('schedule-fields').style.display = 'block';
-    };
-    document.getElementById('book-now').onclick = function() {
-      document.getElementById('schedule-fields').style.display = 'none';
-    };
+    <script>
+      document.getElementById('schedule-later').onclick = function() {
+        document.getElementById('schedule-fields').style.display = 'block';
+      };
+      document.getElementById('book-now').onclick = function() {
+        document.getElementById('schedule-fields').style.display = 'none';
+      };
 
-    document.getElementById('car-owner-form').onsubmit = function(event) {
-      event.preventDefault();
-      // Collect data from the form
-      const formData = new FormData(event.target);
-      const bookingType = formData.get('booking-type');
-      const scheduleDate = formData.get('schedule-date');
-      const scheduleTime = formData.get('schedule-time');
+      document.getElementById('car-owner-form').onsubmit = function(event) {
+        event.preventDefault();
+        // Collect data from the form
+        const formData = new FormData(event.target);
+        const bookingType = formData.get('booking-type');
+        const scheduleDate = formData.get('schedule-date');
+        const scheduleTime = formData.get('schedule-time');
 
-      if (bookingType === 'later' && (!scheduleDate || !scheduleTime)) {
-        alert('Please provide both date and time for scheduling.');
-        return;
-      }
+        if (bookingType === 'later' && (!scheduleDate || !scheduleTime)) {
+          alert('Please provide both date and time for scheduling.');
+          return;
+        }
 
-      // Save booking data to Firestore
-      db.collection("bookings").add({
-        ownerName: formData.get('owner-name'),
-        ownerContact: formData.get('owner-contact'),
-        carMake: formData.get('car-make'),
-        carModel: formData.get('car-model'),
-        carYear: formData.get('car-year'),
-        carLicensePlate: formData.get('car-license-plate'),
-        carLocation: formData.get('car-location'),
-        locationLat: formData.get('location-lat'),
-        locationLng: formData.get('location-lng'),
-        bookingType: bookingType,
-        scheduleDate: scheduleDate,
-        scheduleTime: scheduleTime,
-        timestamp: firebase.firestore.FieldValue.serverTimestamp()
-      })
-      .then(() => {
-        alert('Booking submitted successfully!');
-      })
-      .catch((error) => {
-        console.error("Error submitting booking: ", error);
-        alert('Failed to submit booking. Please try again.');
-      });
-    };
-  </script>
+        // Save booking data to Firestore
+        db.collection("bookings").add({
+          ownerName: formData.get('owner-name'),
+          ownerContact: formData.get('owner-contact'),
+          carMake: formData.get('car-make'),
+          carModel: formData.get('car-model'),
+          carYear: formData.get('car-year'),
+          carLicensePlate: formData.get('car-license-plate'),
+          carLocation: formData.get('car-location'),
+          locationLat: formData.get('location-lat'),
+          locationLng: formData.get('location-lng'),
+          bookingType: bookingType,
+          scheduleDate: scheduleDate,
+          scheduleTime: scheduleTime,
+          timestamp: firebase.firestore.FieldValue.serverTimestamp()
+        })
+        .then(() => {
+          alert('Booking submitted successfully!');
+        })
+        .catch((error) => {
+          console.error("Error submitting booking: ", error);
+          alert('Failed to submit booking. Please try again.');
+        });
+      };
+    </script>
+  </div>
 </body>
 </html>
