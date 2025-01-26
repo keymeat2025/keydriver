@@ -14,15 +14,16 @@ body {
   border-radius: 8px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
   text-align: center;
-  width: 300px;
+  width: 400px; /* Increased width for better layout */
 }
 
-input {
+input, select {
   width: 100%;
   padding: 10px;
   margin: 10px 0;
   border: 1px solid #ccc;
   border-radius: 4px;
+  box-sizing: border-box; /* Ensures padding is included in width */
 }
 
 button {
@@ -36,4 +37,19 @@ button {
 
 button:hover {
   background-color: #218838;
+}
+
+label {
+  font-weight: bold;
+  display: block; /* Ensures each label is on a new line */
+  margin-bottom: 5px; /* Adds space between label and input */
+}
+
+h2, h3 {
+  color: #333;
+  margin-bottom: 20px;
+}
+
+#schedule-fields {
+  display: none;
 }
