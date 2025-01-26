@@ -14,7 +14,9 @@ body {
   border-radius: 8px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
   text-align: center;
-  width: 400px; /* Increased width for better layout */
+  width: 90%;
+  max-width: 400px;
+  margin: 20px;
 }
 
 input, select {
@@ -23,7 +25,7 @@ input, select {
   margin: 10px 0;
   border: 1px solid #ccc;
   border-radius: 4px;
-  box-sizing: border-box; /* Ensures padding is included in width */
+  box-sizing: border-box;
 }
 
 button {
@@ -41,8 +43,8 @@ button:hover {
 
 label {
   font-weight: bold;
-  display: block; /* Ensures each label is on a new line */
-  margin-bottom: 5px; /* Adds space between label and input */
+  display: block;
+  margin-bottom: 5px;
 }
 
 h2, h3 {
@@ -52,4 +54,11 @@ h2, h3 {
 
 #schedule-fields {
   display: none;
+}
+
+@media (max-width: 600px) {
+  .container {
+    width: 100%;
+    padding: 10px;
+  }
 }
