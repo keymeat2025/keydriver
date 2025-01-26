@@ -8,7 +8,6 @@
   <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore.js"></script>
   <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_GOOGLE_MAPS_API_KEY&libraries=places"></script>
   <script>
-    // Your Firebase configuration
     const firebaseConfig = {
       apiKey: "YOUR_API_KEY",
       authDomain: "YOUR_AUTH_DOMAIN",
@@ -18,11 +17,9 @@
       appId: "YOUR_APP_ID",
     };
 
-    // Initialize Firebase
     firebase.initializeApp(firebaseConfig);
     const db = firebase.firestore();
 
-    // Initialize Google Maps Places API
     function initMap() {
       const input = document.getElementById('car-location');
       const autocomplete = new google.maps.places.Autocomplete(input);
@@ -64,11 +61,13 @@
       <label for="car-make">Car Make (e.g., Maruti Suzuki, Hyundai):</label><br>
       <input type="text" id="car-make" name="car-make" required><br><br>
 
-      <label for="car-model">Car Model (e.g., Swift, i20):</label><br>
-      <input type="text" id="car-model" name="car-model" required><br><br>
-
-      <label for="car-year">Year of Manufacture:</label><br>
-      <input type="number" id="car-year" name="car-year" required><br><br>
+      <label for="car-model">Car Model:</label><br>
+      <select id="car-model" name="car-model" required>
+        <option value="Swift">Swift</option>
+        <option value="i20">i20</option>
+        <option value="Alto">Alto</option>
+        <!-- Add more car models as needed -->
+      </select><br><br>
 
       <label for="car-license-plate">License Plate Number:</label><br>
       <input type="text" id="car-license-plate" name="car-license-plate" required><br><br>
@@ -76,7 +75,7 @@
       <label for="car-location">Car Location:</label><br>
       <input type="text" id="car-location" name="car-location" required><br><br>
       <input type="hidden" id="location-lat" name="location-lat">
-      <input type="hidden" id="location-lng" name="location-lng">
+      <input type="hidden" id="location-lng" name="location-lng"><br><br>
 
       <h3>Book a Driver</h3>
       <input type="radio" id="book-now" name="booking-type" value="now" checked>
@@ -90,7 +89,7 @@
 
         <label for="schedule-time">Time:</label><br>
         <input type="time" id="schedule-time" name="schedule-time"><br><br>
-      </div>
+      </div><br>
 
       <input type="submit" value="Submit">
     </form>
@@ -105,7 +104,6 @@
 
       document.getElementById('car-owner-form').onsubmit = function(event) {
         event.preventDefault();
-        // Collect data from the form
         const formData = new FormData(event.target);
         const bookingType = formData.get('booking-type');
         const scheduleDate = formData.get('schedule-date');
@@ -116,13 +114,11 @@
           return;
         }
 
-        // Save booking data to Firestore
         db.collection("bookings").add({
           ownerName: formData.get('owner-name'),
           ownerContact: formData.get('owner-contact'),
           carMake: formData.get('car-make'),
           carModel: formData.get('car-model'),
-          carYear: formData.get('car-year'),
           carLicensePlate: formData.get('car-license-plate'),
           carLocation: formData.get('car-location'),
           locationLat: formData.get('location-lat'),
